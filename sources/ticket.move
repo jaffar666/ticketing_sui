@@ -12,7 +12,6 @@ module ticketing::ticketing {
     const ERR_INSUFFICIENT_BALANCE: u64 = 1;
     const ERR_TICKET_ALREADY_PAID: u64 = 0;
 
-
     // Customer struct to hold customer details
     public struct Customer has key, store {
         id: UID,
