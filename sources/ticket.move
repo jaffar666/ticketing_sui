@@ -53,6 +53,10 @@ module ticketing::ticket {
     }
 
     // Function to get customer details
+    public fun get_customer_loyalty(customer: &Customer): u64 {
+        customer.loyalty_points
+    }
+
     public fun get_customer_details(customer: &Customer): (vector<u8>, &Balance<SUI>, u64) {
         (customer.name, &customer.balance, customer.loyalty_points)
     }
