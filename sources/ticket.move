@@ -148,12 +148,6 @@ module ticketing::ticketing {
         transfer::public_transfer(loyalty_points_pay, reciepient);
     }
 
-     // Function to apply a discount to a ticket order
-    public fun apply_discount(order: &mut TicketOrder, discount: u64) {
-        order.discount = discount;
-        order.total_price = order.total_price - discount;
-    }
-
      // Function to handle partial payments for ticket orders
     public fun process_partial_payment(
         customer: &mut Customer,
