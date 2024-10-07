@@ -65,8 +65,13 @@ module ticketing::ticketing {
         customer.balance.join(balance_to_add);
     }
 
+    // Function to get ticket order details
+    public fun get_ticket_order_details(order: &TicketOrder): (&ID, &vector<EventTicket>, u64, bool, u64) {
+        (&order.customer, &order.tickets, order.total_price, order.is_paid, order.discount)
+    }
+
     // Function to add loyalty points to the customer's account
-    public fun add_loyalty_points(customer: &mut Customer, points: u64) {
+    fun add_loyalty_points(customer: &mut Customer, points: u64) {
         customer.loyalty_points = customer.loyalty_points + points;
     }
 
@@ -85,32 +90,25 @@ module ticketing::ticketing {
         ticket
     }
 
-
-
-     // Function to place a ticket order
+    // Function to place a ticket order
     public fun place_ticket_order(
         customer: &mut Customer,
-        tickets: vector<EventTicket>,
+        ticket: EventTicket,
         discount: u64,
         total_price: u64,
         ctx: &mut TxContext,
     ): TicketOrder {
         let order_id = object::new(ctx);
-        let order = TicketOrder {
+        let mut order = TicketOrder {
             id: order_id,
             customer: object::uid_to_inner(&customer.id),
-            tickets,
+            tickets: vector::empty(),
             total_price,
             is_paid: false,
             discount,
         };
+        order.tickets.push_back(ticket);
         order
-    }
-
-
-    // Function to get ticket order details
-    public fun get_ticket_order_details(order: &TicketOrder): (&ID, &vector<EventTicket>, u64, bool, u64) {
-        (&order.customer, &order.tickets, order.total_price, order.is_paid, order.discount)
     }
 
     // Function to process payment for a ticket order using balance
@@ -138,7 +136,7 @@ module ticketing::ticketing {
         customer: &mut Customer,
         order: &mut TicketOrder,
         reciepient: address,
-        ctx : &mut TxContext,
+        ctx: &mut TxContext,
     ) {
         assert!(!order.is_paid, ERR_TICKET_ALREADY_PAID);
         assert!(customer.loyalty_points >= order.total_price, ERR_INSUFFICIENT_BALANCE);
@@ -181,7 +179,4 @@ module ticketing::ticketing {
         };
         transfer::public_transfer(pay_amount,reciepient);
     }
-
-
-
 }
