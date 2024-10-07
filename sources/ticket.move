@@ -1,5 +1,5 @@
 #[allow(duplicate_alias)]
-module ticketing::ticketing {
+module ticketing::ticket {
 
     // Imports
     use sui::sui::SUI;
